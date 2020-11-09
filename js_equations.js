@@ -7,39 +7,52 @@ function calcEquation(a,b,c)
         return 1;
     }
     if (a !== 0) out_data.type = "Quadric";
-    else if ((b + c) != 0 && a > 0) out_data.type = "Linear";
-    else if ((b + c) !== 0) out_data.type = "Infinite";
+    else if (b != 0 && a == 0) out_data.type = "Linear";
+    else if (c != 0) out_data.type = "Infinite";
     else out_data.type = "Trivial";
     switch (out_data.type)
     {
         case "Quadric":
             discr = Math.pow(b, 2) - 4 * a * c;
+            is_B_EqualsZero = b == 0;
             if (discr > 0)
             {
                 let multiplied_a = (2 * a);
                 let discr_sqrt = Math.sqrt(discr);
                 out_data.result.x1 = (-b + discr_sqrt) / multiplied_a;
                 out_data.result.x2 = (-b - discr_sqrt) / multiplied_a;
+
             }
-            else if (discr == 0) out_data.result.x = (-b) / (2 * a);
+            else if (discr == 0) 
+            {
+                out_data.result.x = (is_B_EqualsZero) ? 0 : (-b) / (2 * a);
+            }
             else
             {
                 console.warn("Output values are complex numbers");
-                out_data.type = "Complex Quadric"
+                out_data.type = "Complex Quadric";
                 let multiplied_a = (2 * a);
                 let discr_sqrt = Math.sqrt(-discr);
-                out_data.result.x1 = (-b / multiplied_a) + " + i*" + (discr_sqrt / multiplied_a);
-                out_data.result.x2 = (-b / multiplied_a) + " - i*" + (discr_sqrt / multiplied_a);
+                if (!is_B_EqualsZero)
+                {
+                    out_data.result.x1 = (-b / multiplied_a) + " + i*" + (discr_sqrt / multiplied_a);
+                    out_data.result.x2 = (-b / multiplied_a) + " - i*" + (discr_sqrt / multiplied_a);
+                }
+                else
+                {
+                    out_data.result.x1 = "i*" + (discr_sqrt / multiplied_a);
+                    out_data.result.x2 = "-i*" + (discr_sqrt / multiplied_a);
+                }
             }
             break;
         case "Linear":
-            out_data.result.x = (-b - c) / a; // ax + b + c = 0, ax = -b - c
+            out_data.result.x = -c / b //  bx + c = 0, b = - c
             break;
         case "Infinite":
             out_data.result.x = "Infinite amount of solutions";
             break;
         case "Trivial":
-            out_data.result.x = 0;
+            out_data.result.x = c;
             break;
     }
     return out_data;
@@ -89,6 +102,10 @@ function tests()
     console.log(calcEquation({xa:0, xb:0, xc:0, xv:10})); //error
     console.log("calcEquation test:\n");
     console.log(calcEquation(0, "100", 0)); //valid
+    console.log(calcEquation(0, 50, 100)); //valid
+    console.log(calcEquation(2, 0, 2)); //valid
     console.log(calcEquation(undefined, "100", 0)); //error
     console.log(calcEquation(undefined, undefined, undefined)); //error
+    
 }
+tests();
