@@ -93,7 +93,7 @@ function calcEquations(equations) //each equation shoud be in format {xa:value, 
     return out_data;
 }
 
-function tests()
+function tests() // call this function if you want run calcEquation tests
 {
     console.log("calcEquations test:");
     console.log(calcEquations([{xa:0, xb:0, xc:0}, {xa:0, xb:"100", xc:0}, {xa:2, xb:3, xc:1}, {xa:4, xb:3, xc:1} ])); //valid
@@ -105,7 +105,5 @@ function tests()
     console.log(calcEquation(0, 50, 100)); //valid
     console.log(calcEquation(2, 0, 2)); //valid
     console.log(calcEquation(undefined, "100", 0)); //error
-    console.log(calcEquation(undefined, undefined, undefined)); //error
-    
+    console.log(calcEquation(undefined, undefined, undefined)); //error 
 }
-tests();
