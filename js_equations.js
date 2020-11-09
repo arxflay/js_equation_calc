@@ -44,7 +44,7 @@ function calcEquation(a,b,c)
     }
     return out_data;
 }
-function calcEquations(equations)
+function calcEquations(equations) //each equation shoud be in format {xa:value, xb:value, xc:value}
 {
     let out_data = [];
     if (equations == undefined)
@@ -64,6 +64,11 @@ function calcEquations(equations)
     }
     for (let i = 0; i < equations.length; i++)
     {
+        if (Object.keys(equations[i]).length > 3) //argument amount check
+        {
+            console.error("Equation had too much arguments");
+            return 1;
+        }
         let rc = calcEquation(equations[i].xa, equations[i].xb, equations[i].xc);
         if (rc == 1)
         {
@@ -81,6 +86,7 @@ function tests()
     console.log(calcEquations([{xa:0, xb:0, xc:0}, {xa:0, xb:"100", xc:0}, {xa:2, xb:3, xc:1}, {xa:4, xb:3, xc:1} ])); //valid
     console.log(calcEquations([{}])); //error
     console.log(calcEquations(undefined)); //error
+    console.log(calcEquation({xa:0, xb:0, xc:0, xv:10})); //error
     console.log("calcEquation test:\n");
     console.log(calcEquation(0, "100", 0)); //valid
     console.log(calcEquation(undefined, "100", 0)); //error
