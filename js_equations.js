@@ -66,7 +66,7 @@ function calcEquations(equations) //each equation shoud be in format {xa:value, 
     {
         if (Object.keys(equations[i]).length > 3) //argument amount check
         {
-            console.error("Equation had too much arguments");
+            console.error("Equation had too many arguments");
             return 1;
         }
         let rc = calcEquation(equations[i].xa, equations[i].xb, equations[i].xc);
