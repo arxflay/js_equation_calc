@@ -1,32 +1,30 @@
+let serverLimit = 0;
+
 function calcEquation(a,b,c)
 {
-    let out_data = {xa : a, xb : b, xc : c, type: "None", result : {}};
+    let out_data = {};
     if (!(!isNaN(a) && !isNaN(b) && !isNaN(c)))
     {
-        console.error("Input shoud contain only numbers");
+        console.error("Input should contain only numbers");
         return 1;
     }
-    if (a !== 0) out_data.type = "Quadric";
-    else if (b != 0 && a == 0) out_data.type = "Linear";
-    else if (c != 0) out_data.type = "Infinite";
-    else out_data.type = "Trivial";
+    if (a !== 0) out_data = {ax2 : a, bx : b, c : c, type : "Quadric", result: {}};
+    else if (b != 0) out_data = {bx : b, c : c, type : "Linear", result: {}};
+    else if (c != 0) out_data = {ax2 : a, bx : b, c : c, type : "Nonsense", result: {}};
+    else out_data = {c : c, type : "Trivial", result: {}};
     switch (out_data.type)
     {
         case "Quadric":
-            discr = Math.pow(b, 2) - 4 * a * c;
-            is_B_EqualsZero = b == 0;
+            let discr = Math.pow(b, 2) - 4 * a * c;
+            let is_B_EqualsZero = b == 0;
             if (discr > 0)
             {
                 let multiplied_a = (2 * a);
                 let discr_sqrt = Math.sqrt(discr);
                 out_data.result.x1 = (-b + discr_sqrt) / multiplied_a;
                 out_data.result.x2 = (-b - discr_sqrt) / multiplied_a;
-
             }
-            else if (discr == 0) 
-            {
-                out_data.result.x = (is_B_EqualsZero) ? 0 : (-b) / (2 * a);
-            }
+            else if (discr == 0) out_data.result.x = (is_B_EqualsZero) ? 0 : (-b) / (2 * a);
             else
             {
                 console.warn("Output values are complex numbers");
@@ -46,10 +44,10 @@ function calcEquation(a,b,c)
             }
             break;
         case "Linear":
-            out_data.result.x = -c / b //  bx + c = 0, b = - c
+            out_data.result.x = (c == 0) ? 0 : -c / b //  bx + c = 0, b = - c
             break;
-        case "Infinite":
-            out_data.result.x = "Infinite amount of solutions";
+        case "Nonsense":
+            out_data.result.x = "Nonsense";
             break;
         case "Trivial":
             out_data.result.x = c;
@@ -57,7 +55,8 @@ function calcEquation(a,b,c)
     }
     return out_data;
 }
-function calcEquations(equations) //each equation shoud be in format {xa:value, xb:value, xc:value}
+
+function calcEquations(equations) //each equation should be in format {ax2:value, bx:value, c:value}
 {
     let out_data = [];
     if (equations == undefined)
@@ -67,12 +66,12 @@ function calcEquations(equations) //each equation shoud be in format {xa:value, 
     }
     else if (!Array.isArray(equations))
     {
-        console.error("Input shoud be an array");
+        console.error("Input should be an array");
         return 1;
     }
-    else if (equations.length >= 20)
+    else if (equations.length >= serverLimit && serverLimit != 0)
     {
-        console.error("You can't calculate more than 20 equations");
+        console.error("You can't calculate more than " + serverLimit + " equations");
         return 1;
     }
     for (let i = 0; i < equations.length; i++)
@@ -82,7 +81,7 @@ function calcEquations(equations) //each equation shoud be in format {xa:value, 
             console.error("Equation had too many arguments");
             return 1;
         }
-        let rc = calcEquation(equations[i].xa, equations[i].xb, equations[i].xc);
+        let rc = calcEquation(equations[i].ax2, equations[i].bx, equations[i].c);
         if (rc == 1)
         {
             console.error("Error occured while function calcEquation was called");
@@ -93,17 +92,20 @@ function calcEquations(equations) //each equation shoud be in format {xa:value, 
     return out_data;
 }
 
-function tests() // call this function if you want run calcEquation tests
+function tests()
 {
+    serverLimit = 10;
     console.log("calcEquations test:");
-    console.log(calcEquations([{xa:0, xb:0, xc:0}, {xa:0, xb:"100", xc:0}, {xa:2, xb:3, xc:1}, {xa:4, xb:3, xc:1} ])); //valid
+    console.log(calcEquations([{ax2:0, bx:0, c:0}, {ax2:0, bx:"100", c:0}, {ax2:2, bx:3, c:1}, {ax2:4, bx:3, c:1} ])); //valid
     console.log(calcEquations([{}])); //error
     console.log(calcEquations(undefined)); //error
-    console.log(calcEquation({xa:0, xb:0, xc:0, xv:10})); //error
+    console.log(calcEquations([{ax2:0, bx:0, c:0, v:10}])); //error
     console.log("calcEquation test:\n");
     console.log(calcEquation(0, "100", 0)); //valid
     console.log(calcEquation(0, 50, 100)); //valid
     console.log(calcEquation(2, 0, 2)); //valid
     console.log(calcEquation(undefined, "100", 0)); //error
-    console.log(calcEquation(undefined, undefined, undefined)); //error 
+    console.log(calcEquation(undefined, undefined, undefined)); //error
 }
+
+tests();
