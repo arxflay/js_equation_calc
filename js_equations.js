@@ -56,7 +56,7 @@ function calcEquation(a,b,c)
     return out_data;
 }
 
-function calcEquations(equations) //use format {ax2:value, bx:value, c:value}, but in case if you need other keys, any other key  can be accepted
+function calcEquations(equations) //use format {ax2:value, bx:value, c:value}
 {
     let out_data = [];
     if (equations == undefined)
