@@ -3,14 +3,14 @@ let serverLimit = 0;
 function calcEquation(a,b,c)
 {
     let out_data = {};
-    if (!(!isNaN(a) && !isNaN(b) && !isNaN(c)))
+    if (isNaN(a) && isNaN(b) && isNaN(c))
     {
         console.error("Input should contain only numbers");
         return 1;
     }
     if (a !== 0) out_data = {ax2 : a, bx : b, c : c, type : "Quadric", result: {}};
-    else if (b != 0) out_data = {bx : b, c : c, type : "Linear", result: {}};
-    else if (c != 0) out_data = {ax2 : a, bx : b, c : c, type : "Nonsense", result: {}};
+    else if (b !== 0) out_data = {bx : b, c : c, type : "Linear", result: {}};
+    else if (c !== 0) out_data = {ax2 : a, bx : b, c : c, type : "Nonsense", result: {}};
     else out_data = {c : c, type : "Trivial", result: {}};
     switch (out_data.type)
     {
@@ -56,7 +56,7 @@ function calcEquation(a,b,c)
     return out_data;
 }
 
-function calcEquations(equations) //each equation should be in format {ax2:value, bx:value, c:value}
+function calcEquations(equations) //use format {ax2:value, bx:value, c:value}, but in case if you need other keys, any other key  can be accepted
 {
     let out_data = [];
     if (equations == undefined)
@@ -76,7 +76,7 @@ function calcEquations(equations) //each equation should be in format {ax2:value
     }
     for (let i = 0; i < equations.length; i++)
     {
-        if (Object.keys(equations[i]).length > 3) //argument amount check
+        if (Object.keys(equations[i]).length > 3) //argument amount check, max is amount is 3
         {
             console.error("Equation had too many arguments");
             return 1;
@@ -96,7 +96,7 @@ function tests()
 {
     serverLimit = 10;
     console.log("calcEquations test:");
-    console.log(calcEquations([{ax2:0, bx:0, c:0}, {ax2:0, bx:"100", c:0}, {ax2:2, bx:3, c:1}, {ax2:4, bx:3, c:1} ])); //valid
+    console.log(calcEquations([{ax2:0, bx:0, c:0}, {ax2:0, bx:"5", c:0}, {ax2:2, bx:3, c:1}, {ax2:4, bx:3, c:1} ])); //valid
     console.log(calcEquations([{}])); //error
     console.log(calcEquations(undefined)); //error
     console.log(calcEquations([{ax2:0, bx:0, c:0, v:10}])); //error
